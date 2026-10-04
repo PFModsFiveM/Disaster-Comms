@@ -7,12 +7,6 @@ public enum Difficulty
     Hard
 }
 
-public enum AnswerInputType
-{
-    MultipleChoice,
-    TextInput
-}
-
 public enum ReactorStatus
 {
     Stable,
@@ -21,25 +15,16 @@ public enum ReactorStatus
     Meltdown
 }
 
-public struct DifficultySettings
-{
-    public float TimePerQuestion;
-    public AnswerInputType InputType;
-    public int ChoiceCount;
-}
-
 [Serializable]
 public class GameConfig
 {
     [Header("Question timing (seconds)")]
     public float easyQuestionTime = 20f;
     public float hardQuestionTime = 10f;
-    [Tooltip("Seconds the feedback line stays up.")]
     public float feedbackDelay = 0.75f;
 
     [Header("Questions")]
     public int questionsPerGame = 10;
-    [Tooltip("Words offered in Easy mode.")]
     public int easyChoiceCount = 5;
 
     [Header("Reactor combustion (percent)")]
@@ -50,7 +35,6 @@ public class GameConfig
 
     [Header("Reactor status thresholds (percent)")]
     public float warningThreshold = 40f;
-    [Tooltip("Status turns CRITICAL and the alarm starts here.")]
     public float criticalThreshold = 70f;
 
     [Header("Meltdown sequence")]
@@ -66,24 +50,15 @@ public class GameConfig
     public string meltdownFailureLine = "CRITICAL REACTOR FAILURE";
     public string meltdownContainmentLine = "CONTAINMENT FAILURE";
 
-    public DifficultySettings GetSettings(Difficulty difficulty)
+    public float GetQuestionTime(Difficulty difficulty)
     {
-        if (difficulty == Difficulty.Hard)
-        {
-            return new DifficultySettings
-            {
-                TimePerQuestion = hardQuestionTime,
-                InputType = AnswerInputType.TextInput,
-                ChoiceCount = 0
-            };
-        }
+        if (difficulty == Difficulty.Hard) return hardQuestionTime;
+        return easyQuestionTime;
+    }
 
-        return new DifficultySettings
-        {
-            TimePerQuestion = easyQuestionTime,
-            InputType = AnswerInputType.MultipleChoice,
-            ChoiceCount = easyChoiceCount
-        };
+    public bool UsesMultipleChoice(Difficulty difficulty)
+    {
+        return difficulty == Difficulty.Easy;
     }
 
     public ReactorStatus GetStatus(float combustion)

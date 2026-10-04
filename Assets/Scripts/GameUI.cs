@@ -106,7 +106,7 @@ public class GameUI : MonoBehaviour
         GameSession session = manager != null ? manager.Session : null;
         if (session == null) return;
 
-        bool multipleChoice = session.Settings.InputType == AnswerInputType.MultipleChoice;
+        bool multipleChoice = session.MultipleChoice;
 
         if (choicesPanel != null) choicesPanel.SetActive(multipleChoice);
         if (textInputPanel != null) textInputPanel.SetActive(!multipleChoice);
@@ -194,7 +194,7 @@ public class GameUI : MonoBehaviour
         if (flashPanel != null) flashPanel.SetActive(session.IsFlashing);
 
         bool answersVisible = session.State == SessionState.Asking || session.State == SessionState.Feedback;
-        bool multipleChoice = session.Settings.InputType == AnswerInputType.MultipleChoice;
+        bool multipleChoice = session.MultipleChoice;
         if (choicesPanel != null) choicesPanel.SetActive(answersVisible && multipleChoice);
         if (textInputPanel != null) textInputPanel.SetActive(answersVisible && !multipleChoice);
 
